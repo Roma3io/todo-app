@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-chi/chi/v5"
 	"log/slog"
 	"os"
 	"todo-app/internal/config"
@@ -14,6 +15,7 @@ const (
 )
 
 func main() {
+	router := chi.NewRouter()
 	cfg := config.MustLoad()
 	log := setupLogger(cfg.Env)
 	log = log.With(slog.String("env", cfg.Env))
