@@ -23,8 +23,8 @@ func NewStorage(storagePath string) (*Storage, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
-	stmt, err := db.Prepare(`CREATE TABLE tasks (
-    id SERIAL PRIMARY KEY AUTOINCREMENT,
+	stmt, err := db.Prepare(`CREATE TABLE IF NOT EXISTS tasks(
+    id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     status VARCHAR(50) NOT NULL);
@@ -43,7 +43,7 @@ func NewStorage(storagePath string) (*Storage, error) {
 func (s *Storage) CreateTask(title, description, status string) (int, error) {
 	const op = "storage.postgresql.CreateTask"
 
-	stmt, err := s.db.Prepare("INSERT INTO tasks VALUES ($1, $2, $3)")
+	stmt, err := s.db.Prepare("INSERT INTO tasks (title, description, status) VALUES ($1, $2, $3) RETURNING id")
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}

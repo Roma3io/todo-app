@@ -4,6 +4,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -37,6 +38,18 @@ func MustLoad() *Config {
 	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
 		log.Fatalf("error reading config file: %s", err)
+	}
+	dbPassword := os.Getenv("DB_PASSWORD")
+	if dbPassword == "" {
+		log.Fatal("DB_PASSWORD environment variable not set")
+	}
+	if !strings.Contains(cfg.StoragePath, "password=") {
+		cfg.StoragePath = strings.Replace(
+			cfg.StoragePath,
+			"postgres://postgres@",
+			"postgres://postgres:"+dbPassword+"@",
+			1,
+		)
 	}
 	return &cfg
 }
