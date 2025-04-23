@@ -30,6 +30,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Post("/tasks", tasks.Create(storage))
 	router.Get("/tasks/{id}", tasks.Get(storage))
+	router.Get("/tasks", tasks.GetAll(storage))
 	server := &http.Server{
 		Addr:         cfg.Address,
 		Handler:      router,
