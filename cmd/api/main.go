@@ -31,6 +31,7 @@ func main() {
 	router.Post("/tasks", tasks.Create(storage))
 	router.Get("/tasks/{id}", tasks.Get(storage))
 	router.Get("/tasks", tasks.GetAll(storage))
+	router.Delete("/tasks/{id}", tasks.Delete(storage))
 	server := &http.Server{
 		Addr:         cfg.Address,
 		Handler:      router,
