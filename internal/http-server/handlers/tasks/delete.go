@@ -18,7 +18,14 @@ func Delete(store *postgresql.Storage) http.HandlerFunc {
 			})
 			return
 		}
-		store.DeleteTask(id)
+		err = store.DeleteTask(id)
+		if err != nil {
+			response.WriteJSON(w, http.StatusInternalServerError, response.Response{
+				Status: response.StatusError,
+				Error:  "no such task",
+			})
+			return
+		}
 		response.WriteJSON(w, http.StatusOK, "deleted task"+strconv.Itoa(id))
 	}
 }

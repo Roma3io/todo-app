@@ -101,11 +101,17 @@ func (s *Storage) DeleteTask(id int) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(id)
+	result, err := stmt.Exec(id)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
-
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("%s: %w", op, err)
+	}
 	return nil
 }
 

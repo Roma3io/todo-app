@@ -21,8 +21,9 @@ func Get(st *postgresql.Storage) http.HandlerFunc {
 		if err != nil {
 			response.WriteJSON(w, http.StatusInternalServerError, response.Response{
 				Status: response.StatusError,
-				Error:  err.Error(),
+				Error:  "unknown task",
 			})
+			return
 		}
 		response.WriteJSON(w, http.StatusOK, task)
 
